@@ -1,0 +1,34 @@
+.inputClass {
+  width: 300px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.input {
+  width: 120px;
+  height: 15px;
+  text-align: center;
+  border: 2px solid #187ec2;
+	background: #F6F6f6;
+  outline: none;
+}
+
+.input:focus {
+  border: 2px solid #06217a;
+}
+
+.span {
+  color: #1f3ab6;
+  font-size: 17px;
+  font-weight: bold;
+}
+
+.errorInput {
+  width: 120px;
+  height: 15px;
+  text-align: center;
+  border: 2px solid #c41422;
+	background: #b83e3e;
+  outline: none;
+}

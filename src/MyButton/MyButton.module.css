@@ -1,0 +1,19 @@
+.button {
+  background-color: royalblue;
+  width: 100px;
+  height: 50px;
+  font-size: 30px;
+  font-weight: bold;
+  border-radius: 10px;
+}
+
+.buttonError {
+  background-color: rgb(17, 61, 192);
+  border: rgb(17, 61, 192) 1px solid;
+  width: 100px;
+  height: 50px;
+  font-size: 30px;
+  font-weight: bold;
+  border-color: royalblue;
+  border-radius: 10px;
+}
