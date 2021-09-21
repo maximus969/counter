@@ -1,146 +1,67 @@
-import React, { useEffect, useState } from 'react';
 import './App.css';
 import { Display } from './Display';
 import { MyButton } from './MyButton/MyButton';
 import { SettingsDisplay } from './SettingsDisplay/SettingsDisplay';
+import { saveState } from './utils/localstorage.utils';
 
-export type StatePropsType = {
-  count: number
-  maxValue: number
-  startValue: number
-  incDisabled: boolean,
-  resetDisabled: boolean,
-  setDisabled: boolean,
-  numbersOnChange: boolean,
-  inCorrectValue: boolean
-}
 
-function App() {
-
-  const [state, setState] = useState<StatePropsType>({
-    count: 0,
-    maxValue: 1,
-    startValue: 0,
-    incDisabled: false,
-    resetDisabled: false,
-    setDisabled: false,
-    numbersOnChange: false,
-    inCorrectValue: false
-  })
-  const [displayButtonClicked, setDisplayButtonClicked] = useState(false)
-
-  useEffect(() => {
-    let stateAsString = localStorage.getItem('myState')
-    if (stateAsString) {
-      let newState = JSON.parse(stateAsString)
-      setState(newState)
-    }
-  }, [])
-
-  useEffect(() => {
-    localStorage.setItem('myState', JSON.stringify(state))
-  }, [displayButtonClicked])
+function App(props: any) {
 
   const increment = () => {
-    if (state.count < state.maxValue) {
-      setState({
-        ...state,
-        count: state.count + 1
-      })
-    }
-    if (state.count + 1 === state.maxValue) {
-      setState({
-        ...state,
-        count: state.count + 1,
-        incDisabled: true
-      })
+    if (props.state.count + 1 === props.state.maxValue) {
+      props.disableIncrementButton()
+    } else if (props.state.count < props.state.maxValue) {
+      props.increaseValue()
     }
   }
 
   const reset = () => {
-    setState({
-      ...state,
-      count: state.startValue,
-      incDisabled: false
-    })
+    props.resetDisplayValue()
   }
 
   const changeMaxValue = (maxValue: number) => {
-    setState({
-      ...state,
-      maxValue: Number(maxValue),
-      setDisabled: false,
-      resetDisabled: true,
-      incDisabled: true,
-      numbersOnChange: true,
-    });
-    if (state.startValue >= maxValue || state.startValue < 0) {
-      setState({
-        ...state,
-        maxValue: Number(maxValue),
-        setDisabled: true,
-        incDisabled: true,
-        resetDisabled: true
-      })
+    props.changeMaxValueWithoutError(Number(maxValue))
+    if (props.state.startValue >= maxValue || props.state.startValue < 0) {
+      props.changeMaxValueWithError(Number(maxValue))
     }
   }
 
   const changeStartValue = (startValue: number) => {
-    setState({
-      ...state,
-      startValue: Number(startValue),
-      setDisabled: false,
-      resetDisabled: true,
-      incDisabled: true,
-      numbersOnChange: true,
-    });
-    if (startValue >= state.maxValue || startValue < 0) {
-      setState({
-        ...state,
-        startValue: Number(startValue),
-        setDisabled: true,
-        incDisabled: true,
-        resetDisabled: true
-      })
+    props.changeStartValueWithoutError(Number(startValue))
+    if (startValue >= props.state.maxValue || startValue < 0) {
+      props.changeStartValueWithError(Number(startValue))
     }
   }
 
   const onSetValue = () => {
-    debugger
-    setState({
-      ...state,
-      count: state.startValue,
-      setDisabled: true,
-      resetDisabled: false,
-      incDisabled: false,
-      numbersOnChange: false
-    });
-    setDisplayButtonClicked(true)
+    props.setValues()
+    saveState({
+      counter: props.state
+    })
   }
 
-  // const incButtonErrorClass = (state.count === state.maxValue ? 'error' : '')
 
   return (
     <div className='container'>
       <div className='App'>
-        <Display count={state.count} maxValue={state.maxValue} numbersOnChange={state.numbersOnChange}
-          setDisabled={state.setDisabled} startValue={state.startValue} />
+        <Display count={props.state.count} maxValue={props.state.maxValue} numbersOnChange={props.state.numbersOnChange}
+          setDisabled={props.state.setDisabled} startValue={props.state.startValue} />
         <div className='buttons'>
-          <MyButton name='inc' onClick={increment} disabled={state.incDisabled} />
-          <MyButton name='reset' onClick={reset} disabled={state.resetDisabled} />
+          <MyButton name='inc' onClick={increment} disabled={props.state.incDisabled} />
+          <MyButton name='reset' onClick={reset} disabled={props.state.resetDisabled} />
         </div>
       </div>
 
       <div className='App'>
         <div >
-          <SettingsDisplay maxValue={state.maxValue}
-            startValue={state.startValue}
-            count={state.count}
+          <SettingsDisplay maxValue={props.state.maxValue}
+            startValue={props.state.startValue}
+            count={props.state.count}
             changeMaxValue={changeMaxValue}
             changeStartValue={changeStartValue} />
         </div>
         <div className='buttons'>
-          <MyButton name='set' onClick={onSetValue} disabled={state.setDisabled} />
+          <MyButton name='set' onClick={onSetValue} disabled={props.state.setDisabled} />
         </div>
       </div>
     </div>

@@ -8,7 +8,7 @@ type MyButtonType = {
 }
 
 export const MyButton = (props: MyButtonType) => {
-debugger
+
   const errorClass = props.disabled ? `${s.buttonError}` : `${s.button}`
 
   const onClick = () => {
